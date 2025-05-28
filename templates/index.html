@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>САВБЕС - Электромонтаж в Оренбурге</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: #FF7F50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 1000;
+        }
+        
+        .chat-header {
+            background-color: #FF7F50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .chat-body {
+            height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background-color: #FF7F50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        
+        .user-message {
+            margin-left: auto;
+            background-color: #FF7F50;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 20px 20px 0 20px;
+        }
+        
+        .bot-message {
+            background-color: #f1f1f1;
+            padding: 10px 15px;
+            border-radius: 20px 20px 20px 0;
+        }
+        
+        .chat-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #FF7F50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        #phoneForm {
+            margin-top: 50px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #phoneForm h2 {
+            margin-top: 0;
+            color: #FF7F50;
+        }
+        
+        #phoneForm input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        #phoneForm button {
+            background-color: #FF7F50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>САВБЕС - Электромонтаж в Оренбурге</h1>
+        <p>Профессиональные услуги электромонтажа под ключ</p>
+    </div>
+    
+    <div class="container">
+        <h2>Наши услуги:</h2>
+        <ul>
+            <li>Монтаж и обслуживание электрощитов</li>
+            <li>Установка электроприборов (розетки, выключатели, светильники)</li>
+            <li>Кабельные работы (прокладка кабеля, скрытая и открытая проводка)</li>
+            <li>Электроснабжение промышленных предприятий</li>
+            <li>Комплексные решения по типам объектов</li>
+            <li>Работа по дизайнерскому проекту</li>
+        </ul>
+        
+        <div id="phoneForm">
+            <h2>Оставить заявку</h2>
+            <form id="contactForm">
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                <input type="tel" name="phone" placeholder="Ваш телефон" required>
+                <input type="email" name="email" placeholder="Ваш email">
+                <input type="hidden" name="comment" id="formComment">
+                <button type="submit">Отправить заявку</button>
+            </form>
+        </div>
+    </div>
+    
+    <button class="chat-toggle" id="chatToggle">💬</button>
+    
+    <div class="chat-container hidden" id="chatContainer">
+        <div class="chat-header">
+            <span>САВБЕС Ассистент</span>
+            <span class="close-btn" id="closeChat">×</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="message bot-message">
+                Здравствуйте! Чем могу помочь?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Введите ваше сообщение...">
+            <button id="sendMessage">➤</button>
+        </div>
+    </div>
+    
+    <script>
+        // Генерируем уникальный ID сессии
+        const sessionId = 'chat_' + Math.random().toString(36).substring(2, 15);
+        
+        // Функция для отправки сообщения
+        async function sendMessage() {
+            const userInput = document.getElementById('userInput');
+            const message = userInput.value.trim();
+            
+            if (message === '') return;
+            
+            // Добавляем сообщение пользователя в чат
+            addMessage(message, true);
+            
+            // Очищаем поле ввода
+            userInput.value = '';
+            
+            try {
+                // Отправляем запрос к API
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Добавляем ответ бота в чат
+                addMessage(data.response, false);
+                
+                // Проверяем, содержит ли ответ номер телефона
+                const phoneRegex = /(\+7|8)[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}/;
+                if (phoneRegex.test(message)) {
+                    // Заполняем форму телефоном
+                    document.querySelector('input[name="phone"]').value = message.match(phoneRegex)[0];
+                    
+                    // Сохраняем в localStorage
+                    localStorage.setItem('savbes_phone', message.match(phoneRegex)[0]);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Извините, произошла ошибка. Пожалуйста, попробуйте еще раз.', false);
+            }
+        }
+        
+        // Функция для добавления сообщения в чат
+        function addMessage(text, isUser) {
+            const chatBody = document.getElementById('chatBody');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            messageDiv.textContent = text;
+            chatBody.appendChild(messageDiv);
+            
+            // Прокручиваем чат вниз
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        // Обработчики событий
+        document.getElementById('sendMessage').addEventListener('click', sendMessage);
+        
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        document.getElementById('chatToggle').addEventListener('click', function() {
+            document.getElementById('chatContainer').classList.remove('hidden');
+            this.classList.add('hidden');
+        });
+        
+        document.getElementById('closeChat').addEventListener('click', function() {
+            document.getElementById('chatContainer').classList.add('hidden');
+            document.getElementById('chatToggle').classList.remove('hidden');
+        });
+        
+        // Обработчик отправки формы
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Получаем данные формы
+            const name = document.querySelector('input[name="name"]').value;
+            const phone = document.querySelector('input[name="phone"]').value;
+            const email = document.querySelector('input[name="email"]').value;
+            
+            // Получаем данные расчета из localStorage
+            const calcData = localStorage.getItem('savbes_calc_data');
+            if (calcData) {
+                document.getElementById('formComment').value = 'Данные расчета: ' + calcData;
+            }
+            
+            // Здесь можно добавить код для отправки данных на сервер
+            alert(`Спасибо за заявку, ${name}! Мы свяжемся с вами в ближайшее время.`);
+            
+            // Очищаем форму
+            this.reset();
+        });
+        
+        // При загрузке страницы заполняем форму данными из localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const phone = localStorage.getItem('savbes_phone');
+            if (phone) {
+                document.querySelector('input[name="phone"]').value = phone;
+            }
+        });
+    </script>
+    
+    <!-- Подключаем скрипт интеграции с Tilda -->
+    <script src="/static/js/tilda-integration.js"></script>
+</body>
+</html>

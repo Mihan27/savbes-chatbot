@@ -1,0 +1,19 @@
+# Секретные файлы - НЕ загружать!
+.env
+env.txt
+*.env
+config_local.py
+passwords.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+
+# Логи
+*.log
+
+# IDE
+.vscode/
+.idea/
